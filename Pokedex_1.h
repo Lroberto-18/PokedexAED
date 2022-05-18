@@ -8,7 +8,7 @@ typedef struct pokemon Pokemon;
 struct noDescritor{
     Pokemon *inicio;
     Pokemon *aux;
-    Pokemon *fim;
+    Pokemon *aux2;
     int qtd, tipo;
 };
 typedef struct noDescritor Lista;
@@ -20,16 +20,16 @@ struct pokedex{
 };
 typedef struct pokedex Pokedex;
 
-Pokedex *criar_pokedex(int qtd);
-void libera_pokedex(Pokedex *P);
-Lista *lista_criar();
-Pokemon *criar_pokemon(Lista*, int, char*, int, int, int, int, int, int, int, int);
-int atualiza_Pokemon ( Pokedex *pd , int);
-int remove_Pokemon(Pokedex *P, int);
-int busca_Pokemon(const Pokedex *P, int);
-void menu(void);
-int remove_Pokemon (Pokedex *P,int idt);
-int qtd_tipo(const Pokedex *P, int tipo);
-int tamanho_pokedex(Pokedex *P);
-void lista_print(const Lista *L);
-void inserir_pokemonOrdenado(Lista* L,Pokemon* pk);
+Pokedex *cria_pokedex(int);
+Lista *lista();
+Pokemon *cria_pokemon(Lista*, int, char*, int, int, int, int, int, int, int);
+int atualiza_Pokemon(Pokedex*,int);
+int remove_Pokemon(Pokedex*, int);
+int busca_Pokemon(const Pokedex*, int);
+int remove_Pokemon (Pokedex*,int);
+int qtd_tipo(const Pokedex*, int);
+int tamanho_pokedex(Pokedex*);
+void lista_print(const Lista*);
+void inseri_pokemon_ordenado(Lista*,Pokemon*);
+void libera_pokedex(Pokedex*);
+void menu();
