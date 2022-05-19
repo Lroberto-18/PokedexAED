@@ -4,7 +4,8 @@
 #include <locale.h>
 #include "Pokedex_1.h"
 
-//Compilador GCC
+//Compilador GCC      POKEDEX Versão 0.1 Disciplina -> Algoritmos e Estruturas de Dados 1
+//Pokedex utilizando vetor(array) de listas
 
 //Criar Lista de Pokemons
 Lista *lista(){
@@ -117,6 +118,7 @@ int atualiza_Pokemon(Pokedex *P,int idt){
                 Pokemon *Pk = (Pokemon *)malloc(sizeof(Pokemon));
                 printf("Inserir o NOME:\n");
                 scanf("%s", newname);
+                fflush(stdin);
                 strcpy(Pk->name, newname);
                 printf("Inserir O HP:\n");
                 scanf("%d", &Pk->hp);
@@ -175,21 +177,21 @@ int tamanho_Pokedex(Pokedex *P){
 
 //Imprime os pokemons de um mesmo tipo inseridos na Pokedex
 void imprime_por_tipo(const Lista *L){
-    Pokemon *p = L->inicio;
+    Pokemon *P = L->inicio;
     printf("\n Início -> ");
-    while(p!=NULL) {
-        printf("___| %s |___\n", &p->name);
-        printf("ID: %d\n", p->id);
-        printf("TIPO: %d\n", p->type);
-        printf("HP: %d\n", p->hp);
-        printf("ATAQUE: %d\n", p->attack);
-        printf("DEFESA: %d\n", p->defense);
-        printf("VELOCIDADE: %d\n", p->speed);
-        printf("VELOCIDADE DE DEFESA: %d\n", p->speed_defense);
-        printf("VELOCIDADE DE ATAQUE:%d\n", p->speed_attack);
-        printf("FORÇA TOTAL: %d\n", p->score);
+    while(P!=NULL) {
+        printf("___| %s |___\n", P->name);
+        printf("ID: %d\n", P->id);
+        printf("TIPO: %d\n", P->type);
+        printf("HP: %d\n", P->hp);
+        printf("ATAQUE: %d\n", P->attack);
+        printf("DEFESA: %d\n", P->defense);
+        printf("VELOCIDADE: %d\n", P->speed);
+        printf("VELOCIDADE DE DEFESA: %d\n", P->speed_defense);
+        printf("VELOCIDADE DE ATAQUE: %d\n", P->speed_attack);
+        printf("FORÇA TOTAL: %d\n", P->score);
         printf("-> ");
-        p = p->next;
+        P = P->next;
     }
     printf("|NULL|\n");
 }
@@ -202,15 +204,14 @@ int qtd_tipo(const Pokedex *P, int tipo){
 //Menu Principal
 void menu(){
     printf("\n\nDigite 1 inserir um novo pokemon:\n");
-    printf("Digite 2 buscar por um pokemon pelo identificador:\n");
-    printf("Digite 3 imprime os pokemons de um mesmo tipo inseridos na Pokedex:\n");
-    printf("Digite 4 consultar a quantidade de pokemon de um  ́unico tipo:\n");
-    printf("Digite 5 consultar a quantidade de pokemons diferentes na pokedex (tamanho):\n");
-    printf("Digite 6 remover pokemon:\n");
-    printf("Digite 7 alterar dos dados de um pokemon:\n");
+    printf("Digite 2 para buscar por um pokemon pelo identificador:\n");
+    printf("Digite 3 para imprime os pokemons de um mesmo tipo inseridos na Pokedex:\n");
+    printf("Digite 4 para consultar a quantidade de pokemon de um  ́unico tipo:\n");
+    printf("Digite 5 para consultar a quantidade de pokemons diferentes na pokedex (tamanho):\n");
+    printf("Digite 6 para remover pokemon:\n");
+    printf("Digite 7 para alterar dos dados de um pokemon:\n");
     printf("Digite 8 para destruir a Pokedex:\n");
     printf("Digite 9 para encerrar:\n");
-    printf("Digite uma opção:\n\n");
 }
 
 //Limpa tela
@@ -239,6 +240,7 @@ int main(){
         printf("Quantidade máxima ultrapassada\n");
         return 0;
     }
+
     do{ menu();
         scanf("%d", &opcaoMenu);
         fflush(stdin);
@@ -295,9 +297,9 @@ int main(){
             limpa_tela();
             printf("Digite um tipo: ");
             scanf("%d", &tipo);
+            fflush(stdin);
             int t_ipo = qtd_tipo(P, tipo-1);
             printf("Quantidade do tipo %d é: %d\n", tipo, t_ipo);
-            fflush(stdin);
             break;
         case 5:
             limpa_tela();
