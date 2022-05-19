@@ -4,6 +4,7 @@
 #include <locale.h>
 #include "Pokedex_1.h"
 
+//Criar Lista de Pokemons
 Lista *lista(){
     Lista *L = (Lista *)malloc(sizeof(Lista));
     L->inicio = NULL;
@@ -27,11 +28,19 @@ Pokedex *cria_pokedex(int qtd){
 }
 
 //Destruir Pokedex
-/*
-	implementação: void libera_Pokedex(Pokedex *P);
-    Essa funcao deve liberar o espaco de memoria para todos as listas de pokemons e para o endereco
-    reservado a Pokedex.
-*/
+void libera_Pokedex(Pokedex *P){
+    int quant = P->qtd;
+    for(int a=0; a<quant;a++){
+        while(P->vetor[a]->inicio!=NULL){
+            struct pokemon *Pk = P->vetor[a]->inicio->next;
+            free(P->vetor[a]->inicio);
+            P->vetor[a]->inicio = Pk;
+        }
+        free(P->vetor[a]);
+    }
+    free(P);
+    printf("Liberou\n");
+}
 
 //criar um novo pokemon
 Pokemon *cria_pokemon(Lista *L,int id,char *name,int type,int hp,int attack,int defense,int speed,int speed_attack,int speed_defense){
@@ -51,7 +60,7 @@ Pokemon *cria_pokemon(Lista *L,int id,char *name,int type,int hp,int attack,int 
 }
 
 //inserir um pokemon ordenado
-void inseri_pokemon_ordenado(Lista *L, Pokemon *pk){
+void insere_Pokemon_ordenado(Lista *L, Pokemon *pk){
     if(L->inicio == NULL){
         L->inicio = pk;
         L->aux2 = pk;
@@ -101,32 +110,29 @@ int atualiza_Pokemon(Pokedex *P,int idt){
         P->vetor[a]->aux = P->vetor[a]->inicio;
         for(int b=0; b<P->vetor[a]->qtd;b++){
             if(P->vetor[a]->aux->id==idt){
-                char nome[25];
-                printf("Inserir o NOME:\n");
-                scanf("%s", nome);
-                strcpy(P->vetor[a]->aux->name, nome);
+                struct pokemon *Pk = P->vetor[a]->aux;
                 printf("Inserir O HP:\n");
-                scanf("%d", &P->vetor[a]->aux->hp);
+                scanf("%d", &Pk->hp);
                 fflush(stdin);
                 printf("Inserir o ATAQUE:\n");
-                scanf("%d", &P->vetor[a]->aux->attack);
+                scanf("%d", &Pk->attack);
                 fflush(stdin);
                 printf("Inserir a DEFESA:\n");
-                scanf("%d", &P->vetor[a]->aux->defense);
+                scanf("%d", &Pk->defense);
                 fflush(stdin);
                 printf("Inserir a VELOCIDADE:\n");
-                scanf("%d", &P->vetor[a]->aux->speed);
+                scanf("%d", &Pk->speed);
                 fflush(stdin);
                 printf("Inserir a VELOCIDADE DE ATAQUE:\n");
-                scanf("%d", &P->vetor[a]->aux->speed_attack);
+                scanf("%d", &Pk->speed_attack);
                 fflush(stdin);
                 printf("Inserir a VELOCIDADE DE DEFESA:\n");
-                scanf("%d", &P->vetor[a]->aux->speed_defense);
+                scanf("%d", &Pk->speed_defense);
                 fflush(stdin);
-                P->vetor[a]->aux->score = P->vetor[a]->aux->hp+P->vetor[a]->aux->attack+P->vetor[a]->aux->defense+P->vetor[a]->aux->speed+P->vetor[a]->aux->speed_attack+P->vetor[a]->aux->speed_defense;
-                struct pokemon *Pk = P->vetor[a]->aux;
+                P->vetor[a]->aux->score = Pk->hp+Pk->attack+Pk->defense+Pk->speed+Pk->speed_attack+Pk->speed_defense;
+                struct pokemon *NovoPk = Pk;
                 int remover = remove_Pokemon(P,idt);
-                inseri_pokemon_ordenado(P->vetor[a],Pk);
+                insere_Pokemon_ordenado(P->vetor[a],NovoPk);
                 return 2;
             }
             P->vetor[a]->aux = P->vetor[a]->aux->next;
@@ -150,7 +156,7 @@ int busca_Pokemon(const Pokedex *P,int idt){
 }
 
 //Consultar a quantidade de pokemons diferentes na lista (tamanho)
-int tamanho_pokedex(Pokedex *P){
+int tamanho_Pokedex(Pokedex *P){
     P->total = 0;
     for(int a = 0; a < P->qtd; a++){
         P->total += P->vetor[a]->qtd;
@@ -159,7 +165,7 @@ int tamanho_pokedex(Pokedex *P){
 }
 
 //Imprime os pokemons de um mesmo tipo inseridos na Pokedex
-void lista_print(const Lista *L){
+void imprime_por_tipo(const Lista *L){
     Pokemon *p = L->inicio;
     printf("\n Início -> ");
     while(p!=NULL) {
@@ -184,6 +190,7 @@ int qtd_tipo(const Pokedex *P, int tipo){
     return P->vetor[tipo]->qtd;
 }
 
+//Menu Principal
 void menu(){
     printf("\n\nDigite 1 inserir um novo pokemon:\n");
     printf("Digite 2 buscar por um pokemon pelo identificador:\n");
@@ -196,6 +203,19 @@ void menu(){
     printf("Digite 9 para encerrar:\n");
     printf("Digite uma opção:\n\n");
 }
+
+//Limpa tela
+void limpa_tela(){
+    #ifdef __linux__
+        system("clear");
+    #elif _WIN32
+        system("cls");
+    #else
+
+    #endif
+}
+
+//Main
 int main(){
     setlocale(LC_ALL, "Portuguese");
     int id, type, hp, attack, defense, speed, speed_attack, speed_defense, score;
@@ -213,10 +233,9 @@ int main(){
     do{ menu();
         scanf("%d", &opcaoMenu);
         fflush(stdin);
-
         switch(opcaoMenu){
         case 1:
-            /*system("clear");
+            limpa_tela();
             printf("Inserir o ID:\n");
             scanf("%d", &id);
             fflush(stdin);
@@ -243,40 +262,28 @@ int main(){
             fflush(stdin);
             printf("Inserir a VELOCIDADE DE DEFESA:\n");
             scanf("%d", &speed_defense);
-            fflush(stdin);*/
-            printf("Inserir o NOME:\n");
-            scanf("%s", name);
-            printf("Inserir o TIPO:\n");
-            scanf("%d", &type);
             fflush(stdin);
-            printf("Inserir o ID:\n");
-            scanf("%d", &id);
-            fflush(stdin);
-            printf("Inserir O HP:\n");
-            scanf("%d", &hp);
-            Pokemon *pk = cria_pokemon(P->vetor[type-1], id, name, type, hp, 49, 45, 49, 65, 65);
-            inseri_pokemon_ordenado(P->vetor[type-1], pk);
+            Pokemon *pk = cria_pokemon(P->vetor[type-1], id, name, type, hp, attack, defense, speed, speed_attack, speed_defense);
+            insere_Pokemon_ordenado(P->vetor[type-1], pk);
             break;
         case 2:
+            limpa_tela();
             printf("Digite um id: ");
             scanf("%d", &id_t);
-
             int k = busca_Pokemon(P,id_t);
-            if(k==1)
-                printf("Não encontrou\n");
-            if(k==2)
-                printf("Encontrou\n");
+            if(k==1) printf("Não encontrou\n");
+            if(k==2) printf("Encontrou\n");
             k=0;
             break;
         case 3:
-            //system("clear");
+            limpa_tela();
             printf("Digite o Tipo: ");
             fflush(stdin);
             scanf("%d", &tipo);
-            lista_print(P->vetor[tipo-1]);
+            imprime_por_tipo(P->vetor[tipo-1]);
             break;
         case 4:
-            //system("clear");
+            limpa_tela();
             printf("Digite um tipo: ");
             scanf("%d", &tipo);
             int t_ipo = qtd_tipo(P, tipo-1);
@@ -284,34 +291,36 @@ int main(){
             fflush(stdin);
             break;
         case 5:
-            tamanho = tamanho_pokedex(P);
+            limpa_tela();
+            tamanho = tamanho_Pokedex(P);
             printf("a quantidades de pokemons em uma Pokedex é: %d\n", tamanho);
             break;
         case 6:
+            limpa_tela();
             printf("Digite um id: ");
             scanf("%d", &id_t);
             int q = remove_Pokemon(P,id_t);
-            if(q==0)
-                printf("Não encontrou\n");
-            if(q==1)
-                printf("Removeu\n");
+            if(q==0) printf("Não encontrou\n");
+            if(q==1) printf("Removeu\n");
             break;
         case 7:
+            limpa_tela();
             printf("Digite um id: ");
             scanf("%d", &id_t);
             aux = atualiza_Pokemon(P,id_t);
-            if(aux==1)
-                printf("Não encontrou\n");
-            if(aux==2)
-                printf("ATUALIZOU\n");
+            if(aux==1) printf("Não encontrou\n");
+            if(aux==2) printf("ATUALIZOU\n");
             aux=0;
             break;
         case 8:
+            limpa_tela();
+            libera_Pokedex(P);
             break;
         default:
             break;
         }
     }while(opcaoMenu!=9);
+    limpa_tela();
     printf("Encerrado\n");
 return 0;
 }
