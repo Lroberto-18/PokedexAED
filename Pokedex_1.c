@@ -4,6 +4,8 @@
 #include <locale.h>
 #include "Pokedex_1.h"
 
+//Compilador GCC
+
 //Criar Lista de Pokemons
 Lista *lista(){
     Lista *L = (Lista *)malloc(sizeof(Lista));
@@ -78,6 +80,7 @@ void insere_Pokemon_ordenado(Lista *L, Pokemon *pk){
     }
     L->qtd += 1;
 }
+
 //remocao de pokemons
 int remove_Pokemon(Pokedex *P, int idt){
     for(int a=0; a<P->qtd;a++){
@@ -106,11 +109,15 @@ int remove_Pokemon(Pokedex *P, int idt){
 
 //atualizar dados de um pokemon
 int atualiza_Pokemon(Pokedex *P,int idt){
+    char newname[25];
     for(int a=0; a<P->qtd;a++){
         P->vetor[a]->aux = P->vetor[a]->inicio;
         for(int b=0; b<P->vetor[a]->qtd;b++){
             if(P->vetor[a]->aux->id==idt){
-                struct pokemon *Pk = P->vetor[a]->aux;
+                Pokemon *Pk = (Pokemon *)malloc(sizeof(Pokemon));
+                printf("Inserir o NOME:\n");
+                scanf("%s", newname);
+                strcpy(Pk->name, newname);
                 printf("Inserir O HP:\n");
                 scanf("%d", &Pk->hp);
                 fflush(stdin);
@@ -129,7 +136,9 @@ int atualiza_Pokemon(Pokedex *P,int idt){
                 printf("Inserir a VELOCIDADE DE DEFESA:\n");
                 scanf("%d", &Pk->speed_defense);
                 fflush(stdin);
-                P->vetor[a]->aux->score = Pk->hp+Pk->attack+Pk->defense+Pk->speed+Pk->speed_attack+Pk->speed_defense;
+                Pk->id = idt;
+                Pk->type = a+1;
+                Pk->score = Pk->hp+Pk->attack+Pk->defense+Pk->speed+Pk->speed_attack+Pk->speed_defense;
                 struct pokemon *NovoPk = Pk;
                 int remover = remove_Pokemon(P,idt);
                 insere_Pokemon_ordenado(P->vetor[a],NovoPk);
@@ -169,7 +178,7 @@ void imprime_por_tipo(const Lista *L){
     Pokemon *p = L->inicio;
     printf("\n Início -> ");
     while(p!=NULL) {
-        printf("___| %s |___\n", p->name);
+        printf("___| %s |___\n", &p->name);
         printf("ID: %d\n", p->id);
         printf("TIPO: %d\n", p->type);
         printf("HP: %d\n", p->hp);
